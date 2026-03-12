@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>角色资料馆</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <!-- 页面头部 + 筛选栏 -->
+    <header>
+      <h1>崩坏·星穹铁道·资料库</h1>
+      <p>角色信息</p>
+   
+    <!-- 筛选栏 -->
+      <div class="filter-bar">
+        <div class="filter-group">
+            <span class="filter-label">角色属性：</span>
+            <div class="btn-group">
+                <button class="filter-btn type-btn active" data-type="all">全部属性</button>
+                <button class="filter-btn type-btn" data-type="物理">物理</button>
+                <button class="filter-btn type-btn" data-type="火">火</button>
+                <button class="filter-btn type-btn" data-type="风">风</button>
+                <button class="filter-btn type-btn" data-type="雷">雷</button>
+                <button class="filter-btn type-btn" data-type="冰">冰</button>
+                <button class="filter-btn type-btn" data-type="量子">量子</button>
+                <button class="filter-btn type-btn" data-type="虚数">虚数</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">角色命途：</span>
+            <div class="btn-group">
+                <button class="filter-btn path-btn active" data-path="all">全部命途</button>
+                <button class="filter-btn path-btn" data-path="毁灭">毁灭</button>
+                <button class="filter-btn path-btn" data-path="巡猎">巡猎</button>
+                <button class="filter-btn path-btn" data-path="智识">智识</button>
+                <button class="filter-btn path-btn" data-path="同谐">同谐</button>
+                <button class="filter-btn path-btn" data-path="虚无">虚无</button>
+                <button class="filter-btn path-btn" data-path="存护">存护</button>
+                <button class="filter-btn path-btn" data-path="丰饶">丰饶</button>
+                <button class="filter-btn path-btn" data-path="记忆">记忆</button>
+                <button class="filter-btn path-btn" data-path="欢愉">欢愉</button>
+            </div>
+        </div>
+
+        <button id="reset-filter">重置筛选</button>
+      </div>
+    </header>
+
+    <div id="character-list" class="character-list">
+      <!-- 角色会自动在这里显示 -->
+    </div>
+
+    <!-- 角色详情页（默认隐藏） -->
+    <div id="character-detail" class="character-detail hidden">
+      <!-- 返回按钮 -->
+      <button id="back-btn" class="back-btn">← 返回列表</button>
+      
+      <!-- 详情内容容器 -->
+      <div class="detail-content">
+        <div class="detail-left">
+          <div class="detail-img">
+            <img id="detail-img" src="" alt="角色图片">
+          </div>
+          <div class="detail-tags">
+            <span id="detail-type" class="tag"></span>
+            <span id="detail-path" class="tag"></span>
+          </div>
+        </div>
+    
+        <div class="detail-right">
+        <h2 id="detail-name" class="detail-name"></h2>
+      
+        <!-- 角色数值展示（固定80级，无需滑块） -->
+        <div class="character-stats">
+            <h3>80级基础属性</h3> <!-- 标题修改为固定80级 -->
+            <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">攻击力：</span>
+                <span id="attack-value" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">防御力：</span>
+                <span id="defense-value" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">生命值：</span>
+                <span id="hp-value" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">速度：</span>
+                <span id="speed-value" class="stat-value">0</span>
+            </div>
+            </div>
+        </div>
+    
+        <div class="detail-desc">
+            <h3>角色简介</h3>
+            <p id="detail-desc-text"></p>
+        </div>
+        
+        <div class="detail-skills">
+            <h3>技能列表</h3>
+            <ul id="detail-skills-list"></ul>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data-characters.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
