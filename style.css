@@ -180,7 +180,7 @@ header p {
 .tag.type-imaginary { background: #faf60c; }
 
 /* 职业标签颜色 */
-.tag.path-distruction { background: #fbce52; }
+.tag.path-destruction { background: #fbce52; }
 .tag.path-the-hunt { background: #0a79e8; }
 .tag.path-erudition { background: #2d3a5d; }
 .tag.path-harmony { background: #5c42f5; }
@@ -452,4 +452,5 @@ header p {
     font-size: 14px;
     color: #444;
     line-height: 1.5;
+
   }
