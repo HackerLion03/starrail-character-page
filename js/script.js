@@ -111,8 +111,8 @@ function renderCharacters() {
             : char.type === "风" ? "wind" : char.type === "雷" ? "lightning" : char.type === "冰" ? "ice" 
             : char.type === "量子" ? "quantum": "imaginary"}`;
     const pathTagClass = `tag path-${char.path === "毁灭" ? "destruction" : char.path === "巡猎" ? "the-hunt" 
-            : char.path === "智识" ? "erudition" : char.path === "虚无" ? "nihility" : char.path === "存护" ? "preservation"
-            : char.path === "丰饶" ? "abundance": char.path === "记忆" ? "remembrance": "elation"}`;
+            : char.path === "智识" ? "erudition" : char.path === "同谐" ? "harmony" : char.path === "虚无" ? "nihility" 
+            : char.path === "存护" ? "preservation": char.path === "丰饶" ? "abundance": char.path === "记忆" ? "remembrance": "elation"}`;
 
     // 卡片内容 展示角色图片，名字，属性，命途
     card.innerHTML = `
