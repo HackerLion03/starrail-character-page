@@ -162,7 +162,7 @@ function showCharacterDetail(char) {
   
   const pathTag = document.getElementById("detail-path");
   pathTag.className = `tag path-${char.path === "毁灭" ? "destruction" : char.path === "巡猎" ? "the-hunt" 
-            : char.path === "智识" ? "erudition" : char.path === "同谐" ? "harmony": char.path === "虚无" ? "nihility" 
+            : char.path === "智识" ? "erudition" : char.path === "同谐" ? "harmony" : char.path === "虚无" ? "nihility" 
             : char.path === "存护" ? "preservation": char.path === "丰饶" ? "abundance": char.path === "记忆" ? "remembrance": "elation"}`;
   pathTag.textContent = `${char.path}`;
 
@@ -284,4 +284,3 @@ function calculateSkillGrowth(growth, levelRange, currentLevel) {
   }
   return growthValues;
 }
-

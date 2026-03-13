@@ -177,7 +177,7 @@ header p {
 .tag.type-lightning { background: #ad15ff; }
 .tag.type-ice { background: #00e1ff; }
 .tag.type-quantum { background: #6200ff; }
-.tag.type-imaginary { background: #faf60c; }
+.tag.type-imaginary { background: #e5e100; }
 
 /* 职业标签颜色 */
 .tag.path-destruction { background: #fbce52; }
@@ -452,5 +452,4 @@ header p {
     font-size: 14px;
     color: #444;
     line-height: 1.5;
-
   }
