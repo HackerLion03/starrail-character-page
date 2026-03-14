@@ -74,6 +74,11 @@
         <div class="detail-right">
         <h2 id="detail-name" class="detail-name"></h2>
       
+        <div class="detail-desc">
+            <h3>角色简介</h3>
+            <p id="detail-desc-text"></p>
+        </div>
+
         <!-- 角色数值展示（固定80级，无需滑块） -->
         <div class="character-stats">
             <h3>80级基础属性</h3> <!-- 标题修改为固定80级 -->
@@ -97,21 +102,33 @@
             </div>
         </div>
     
-        <div class="detail-desc">
-            <h3>角色简介</h3>
-            <p id="detail-desc-text"></p>
-        </div>
-        
         <div class="detail-skills">
             <h3>技能列表</h3>
             <ul id="detail-skills-list"></ul>
+        </div>
+        
+        <!-- 行迹 3个小格子 -->
+       <div class="traces-section">
+          <h3 class="traces-title">行迹</h3>
+          <div class="traces-grid">
+            <div class="trace-card" id="trace1"></div>
+            <div class="trace-card" id="trace2"></div>
+            <div class="trace-card" id="trace3"></div>
+          </div>
+        </div>
+
+        <!-- 然后是星魂 -->
+        <div class="constellation-section">
+          <h3 class="constellation-title">星魂</h3>
+          <ul id="constellation-list"></ul>
         </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="js/data-characters.js"></script>
+  <script src="js/data-characters3.js"></script>
+  <script src="js/data-characters4.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>

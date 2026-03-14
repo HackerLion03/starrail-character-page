@@ -15,7 +15,7 @@ body {
   margin: 0 auto;
 }
 
-/* 头部样式 */
+/* 头部 */
 header {
   text-align: center;
   margin-bottom: 40px;
@@ -30,10 +30,10 @@ header h1 {
 header p {
   color: #666;
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
-/* 筛选栏样式 - 按钮组版 */
+/* 筛选栏 */
 .filter-bar {
   display: flex;
   align-items: flex-start;
@@ -56,17 +56,14 @@ header p {
   font-size: 14px;
   color: #333;
   font-weight: bold;
-  text-align: left;
 }
 
-/* 按钮组容器 */
 .btn-group {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-/* 筛选按钮基础样式 */
 .filter-btn {
   padding: 6px 12px;
   border: 1px solid #ddd;
@@ -78,20 +75,17 @@ header p {
   transition: all 0.2s;
 }
 
-/* 按钮选中态（高亮） */
 .filter-btn.active {
   background: #367ff9;
   color: white;
   border-color: #367ff9;
 }
 
-/* 按钮hover效果 */
 .filter-btn:hover:not(.active) {
   border-color: #367ff9;
   color: #367ff9;
 }
 
-/* 重置按钮 */
 #reset-filter {
   padding: 6px 16px;
   background: #e74c3c;
@@ -100,7 +94,6 @@ header p {
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
   margin-top: 24px;
 }
 
@@ -108,14 +101,13 @@ header p {
   background: #c0392b;
 }
 
-/* 角色列表样式 */
+/* 角色列表 */
 .character-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
 }
 
-/* 角色卡片样式 */
 .character-card {
   background: white;
   border-radius: 12px;
@@ -132,7 +124,6 @@ header p {
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
-/* 角色图片 */
 .character-img {
   width: 100%;
   height: 180px;
@@ -147,19 +138,16 @@ header p {
   object-fit: cover;
 }
 
-/* 角色名称 */
 .character-name {
   font-size: 18px;
   color: #222;
   margin-bottom: 8px;
 }
 
-/* 属性/职业标签 */
 .character-tags {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-bottom: 10px;
 }
 
 .tag {
@@ -170,8 +158,8 @@ header p {
   font-weight: bold;
 }
 
-/* 属性标签颜色 */
-.tag.type-physical { background: rgb(182, 182, 182); }
+/* 属性颜色 */
+.tag.type-physical { background: #b6b6b6; }
 .tag.type-fire { background: #fd301a; }
 .tag.type-wind { background: #5bf746; }
 .tag.type-lightning { background: #ad15ff; }
@@ -179,7 +167,7 @@ header p {
 .tag.type-quantum { background: #6200ff; }
 .tag.type-imaginary { background: #e5e100; }
 
-/* 职业标签颜色 */
+/* 命途颜色 */
 .tag.path-destruction { background: #fbce52; }
 .tag.path-the-hunt { background: #0a79e8; }
 .tag.path-erudition { background: #2d3a5d; }
@@ -190,7 +178,6 @@ header p {
 .tag.path-remembrance { background: #3ff9ff; }
 .tag.path-elation { background: #ff661a; }
 
-/* 无数据提示 */
 .empty-tip {
   grid-column: 1/-1;
   text-align: center;
@@ -199,13 +186,11 @@ header p {
   font-size: 16px;
 }
 
-/* ========== 角色详情页样式 ========== */
-/* 隐藏类：默认隐藏详情页 */
+/* 详情页 */
 .hidden {
   display: none !important;
 }
 
-/* 详情页容器 */
 .character-detail {
   background: white;
   border-radius: 12px;
@@ -214,7 +199,6 @@ header p {
   margin-top: 20px;
 }
 
-/* 返回按钮 */
 .back-btn {
   padding: 8px 16px;
   background: #367ff9;
@@ -224,14 +208,12 @@ header p {
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 20px;
-  transition: background 0.2s;
 }
 
 .back-btn:hover {
   background: #2568e6;
 }
 
-/* 详情内容布局 */
 .detail-content {
   display: flex;
   gap: 30px;
@@ -239,7 +221,6 @@ header p {
   justify-content: center;
 }
 
-/* 左侧：图片+标签 */
 .detail-left {
   flex: 0 0 300px;
   text-align: center;
@@ -270,55 +251,7 @@ header p {
   padding: 6px 12px;
 }
 
-/* 新增：等级调整样式 */
-.level-control {
-  background: #f8f9fa;
-  padding: 16px;
-  border-radius: 8px;
-  margin-top: 20px;
-  text-align: left;
-}
-
-.level-control h3 {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.level-display {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.level-num {
-  font-weight: bold;
-  color: #367ff9;
-  font-size: 16px;
-}
-
-#level-slider {
-  width: 100%;
-  height: 8px;
-  accent-color: #367ff9; /* 滑块主题色 */
-  cursor: pointer;
-}
-
-/* 右侧：文字信息+数值展示 */
-.detail-right {
-  flex: 1;
-  min-width: 300px;
-}
-
-.detail-name {
-  font-size: 32px;
-  color: #222;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-}
-
-/* 新增：角色数值样式 */
+/* 属性面板 */
 .character-stats {
   background: #f8f9fa;
   padding: 16px;
@@ -339,7 +272,6 @@ header p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
-  margin-top: 10px;
 }
 
 .stat-item {
@@ -361,11 +293,26 @@ header p {
   font-weight: bold;
 }
 
-.detail-desc, .detail-skills {
+.detail-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+.detail-name {
+  font-size: 32px;
+  color: #222;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.detail-desc,
+.detail-skills {
   margin-bottom: 24px;
 }
 
-.detail-desc h3, .detail-skills h3 {
+.detail-desc h3,
+.detail-skills h3 {
   font-size: 18px;
   color: #333;
   margin-bottom: 12px;
@@ -380,76 +327,192 @@ header p {
   line-height: 1.6;
 }
 
+/* 技能列表 */
 .detail-skills-list {
   list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
-.detail-skills-list li {
-  background: #f8f9fa;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  border-left: 4px solid #367ff9;
+.skill-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-left: 4px solid #007bff;
+  border-radius: 8px;
+  background: #ffffff;
 }
 
-.detail-skills-list li strong {
-  color: #222;
-  display: block;
-  margin-bottom: 4px;
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.detail-skills-list li span {
+.skill-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.skill-level-range {
   color: #666;
+  font-size: 14px;
+}
+
+.skill-level-control {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.skill-current-level {
+  font-size: 14px;
+  color: #333;
+}
+
+.skill-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #eee;
+  outline: none;
+}
+
+.skill-slider::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+}
+
+.skill-desc {
+  font-size: 14px;
+  color: #444;
   line-height: 1.5;
 }
 
-/* 新增技能详情页面*/
-.skill-item {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-  }
-  .skill-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .skill-name {
-    font-size: 16px;
-    font-weight: 600;
-  }
-  .skill-level-range {
-    color: #666;
-    font-size: 14px;
-  }
-  .skill-level-control {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
-  }
-  .skill-current-level {
-    font-size: 14px;
-    color: #333;
-  }
-  .skill-slider {
-    flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: #eee;
-    outline: none;
-  }
-  .skill-slider::-webkit-slider-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #007bff;
-    cursor: pointer;
-  }
-  .skill-desc {
-    font-size: 14px;
-    color: #444;
-    line-height: 1.5;
-  }
+/* 技能描述切换 */
+.desc-short { display: block; }
+.desc-detail { display: none; margin-top: 6px; }
+.toggle-btn {
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  background: #eef2ff;
+  color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 蓝色数值 */
+.skill-value {
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* 行迹 */
+.traces-section {
+  margin-top: 20px;
+}
+
+.traces-title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 12px;
+  display: inline-block;
+  border-bottom: 2px solid #367ff9;
+  padding-bottom: 4px;
+}
+
+.traces-grid {
+  display: flex;
+  gap: 10px;
+}
+
+.trace-card {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-left: 4px solid #007bff;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.4;
+}
+
+.trace-name {
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.trace-desc {
+  color: #444;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 全局清除小圆点 */
+ul, ol, li {
+  list-style: none !important;
+}
+
+/* 星魂 */
+.constellation-section {
+  margin-top: 24px;
+}
+.constellation-title {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 12px;
+  display: inline-block;
+  border-bottom: 2px solid #367ff9;
+  padding-bottom: 4px;
+}
+#constellation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.constellation-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-left: 4px solid #007bff;
+  border-radius: 8px;
+  background: #fff;
+}
+.constellation-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.constellation-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.constellation-content {
+  flex: 1;
+}
+.constellation-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 4px;
+}
+.constellation-desc {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+}
