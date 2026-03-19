@@ -125,8 +125,23 @@ function showCharacterDetail(char) {
   document.getElementById("defense-value").textContent = char.stats.defense;
   document.getElementById("hp-value").textContent = char.stats.hp;
   document.getElementById("speed-value").textContent = char.stats.speed;
+  document.getElementById("energy-value").textContent = char.stats.energy;
+
 
   renderSkills(char);
+
+  const detailRight = document.querySelector(".detail-right");
+  detailRight.classList.remove("color-fire", "color-ice", "color-lightning", "color-wind", "color-physical", "color-quantum", "color-imaginary");
+
+  switch (char.type) {
+    case "火": detailRight.classList.add("color-fire"); break;
+    case "冰": detailRight.classList.add("color-ice"); break;
+    case "雷": detailRight.classList.add("color-lightning"); break;
+    case "风": detailRight.classList.add("color-wind"); break;
+    case "物理": detailRight.classList.add("color-physical"); break;
+    case "量子": detailRight.classList.add("color-quantum"); break;
+    case "虚数": detailRight.classList.add("color-imaginary"); break;
+  }
 }
 
 function renderSkills(char) {
@@ -138,25 +153,33 @@ function renderSkills(char) {
     li.className = "skill-item";
     const [min, max] = skill.levelRange;
     const level = skillIndependentLevels[i];
-    const values = calculateSkillGrowth(skill.growth, skill.levelRange, level);
+    const values = calculateSkillGrowth(skill.growth, skill.levelRange, level, skill);
 
     function format(t) {
       if (!t) return "";
-      Object.entries(values).forEach(([k, v]) => t = t.replaceAll(`{${k}}`, `<span class="skill-value">${Math.round(v)}</span>`));
+      Object.entries(values).forEach(([k, v]) => t = t.replaceAll(`{${k}}`, `<span class="skill-value">${v.toFixed(2)}</span>`));
       return t;
     }
+
+    // ========== 自动隐藏秘技等级条 ==========
+    const showLevelBar = min !== max;
+    const levelText = showLevelBar ? `（${min}-${max}级）` : "";
 
     li.innerHTML = `
       <div class="skill-header">
         <strong class="skill-name">${skill.name}</strong>
-        <span class="skill-level-range">（${min}-${max}级）</span>
+        <span class="skill-level-range">${levelText}</span>
       </div>
+
+      ${showLevelBar ? `
       <div class="skill-level-control">
         <span class="skill-current-level">当前等级：${level}</span>
         <input type="range" class="skill-slider" data-skill-index="${i}" min="${min}" max="${max}" value="${level}">
       </div>
+      ` : ""}
+
       <div class="skill-desc">
-        <div class="desc-short">${format(skill.simpleDesc)}</div>
+        <div class="desc-short">${format(skill.simpleDesc || skill.desc)}</div>
         <div class="desc-detail">${format(skill.desc)}</div>
         <button class="toggle-btn">查看详情</button>
       </div>
@@ -173,7 +196,23 @@ function renderSkills(char) {
     document.getElementById("trace3").innerHTML = `<div class="trace-name">${char.traces[2].name}</div><div class="trace-desc">${char.traces[2].desc}</div>`;
   }
 
-  //  星魂 
+  // 成长属性
+  const growGrid = document.getElementById("grow-stats-grid");
+  growGrid.innerHTML = "";
+
+  if (char.growStats && char.growStats.length > 0) {
+    char.growStats.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "trace-card";
+      div.innerHTML = `
+        <div class="trace-name">${item.name}</div>
+        <div class="trace-desc">${item.value}</div>
+      `;
+      growGrid.appendChild(div);
+    });
+  }
+
+  // 星魂
   const consSection = document.querySelector(".constellation-section");
   const consList = document.getElementById("constellation-list");
   consList.innerHTML = "";
@@ -212,23 +251,27 @@ function updateSingleSkillDesc(i) {
   const skill = currentCharacter.skills[i];
   const item = document.querySelectorAll(".skill-item")[i];
   const level = skillIndependentLevels[i];
-  const values = calculateSkillGrowth(skill.growth, skill.levelRange, level);
+  const values = calculateSkillGrowth(skill.growth, skill.levelRange, level, skill);
 
   function format(t) {
     if (!t) return "";
-    Object.entries(values).forEach(([k, v]) => t = t.replaceAll(`{${k}}`, `<span class="skill-value">${Math.round(v)}</span>`));
+    Object.entries(values).forEach(([k, v]) => t = t.replaceAll(`{${k}}`, `<span class="skill-value">${v.toFixed(2)}</span>`));
     return t;
   }
 
-  item.querySelector(".desc-short").innerHTML = format(skill.simpleDesc);
+  item.querySelector(".desc-short").innerHTML = format(skill.simpleDesc || skill.desc);
   item.querySelector(".desc-detail").innerHTML = format(skill.desc);
 }
 
-function calculateSkillGrowth(growth, range, level) {
+function calculateSkillGrowth(growth, range, level, skill) {
   const res = {};
   const [minL, maxL] = range;
   const curr = Math.max(minL, Math.min(maxL, level));
   if (!growth) return res;
+
+  if (skill && skill.customCalc) {
+    return skill.customCalc(level, curr);
+  }
 
   for (const [k, [min, max]] of Object.entries(growth)) {
     let val;
@@ -239,12 +282,11 @@ function calculateSkillGrowth(growth, range, level) {
     } else {
       val = min + (max - min) * (curr - minL) / (maxL - minL);
     }
-    res[k] = Math.round(val);
+    res[k] = val;
   }
   return res;
 }
 
-// 切换详情
 document.addEventListener("click", e => {
   if (!e.target.classList.contains("toggle-btn")) return;
   const btn = e.target;

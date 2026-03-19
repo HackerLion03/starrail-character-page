@@ -1,238 +1,86 @@
-// ======================
-// 在这里写你的所有角色！
-// ======================
-const characters = [
-  {
-    id: 1,
-    name: "爻光",
-    type: "物理",
-    path: "欢愉",
-    img: "images/爻光立绘.jpg",
-    stats: {
-      attack: Math.round(465.7), // 80级攻击力
-      defense: Math.round(654.88), // 80级防御力
-      hp: Math.round(1242), // 80级生命值
-    },
-    desc: "神秘，大胆，激进，求变之举令人瞠目结舌。"+
-    "以巡猎之「眼」遍观吉凶，明知天意难违，「戎韬将军」仍旧孤身涉险。"+
-    "这一支下下签，如何能够改运换天？",
-    skills: [
-      { name: "普攻 - 雀翎鸣镝，过招有喜", 
-        levelRange:[1,10],
-        growth:{
-            mainDamage:[45,126],
-            adjacentDamage:[15,42]
-        },
-        desc: "对指定敌方单体造成等同于爻光{mainRatio}%"+
-        "攻击力的物理属性伤害，同时对其相邻目标造成等同于爻光{adjacentRatio}%"+
-        "攻击力的物理属性伤害。普攻恢复的能量提高至30点"
-       },
-      { name: "战技 - 十方光映，万法皆明", levelRange:[1,15],
-        desc: "展开结界，持续"+
-        "回合, 自身每回合开始时结界持续回合数减1。结界持续期间, "+
-        "我方全体目标欢愉度提高，提高数值等同于爻光欢愉度的"+
-        "，且爻光施放普攻、战技后获得笑点"
-       },
-      { name: "终结技 - 霓裳铁羽，六爻皆吉", levelRange:[1,15], 
-        desc: "获得5个笑点。使阿哈立即获得1个固定计入20笑点的额外回合，该回合不消耗笑点，"+
-        "并使我方全体目标全属性抗性穿透提高"+
-        ", 持续3回合"
-       }
-    ]
-  },
-  {
-    id: 2,
-    name: "火花",
-    type: "火",
-    path: "欢愉",
-    img: "images/火花立绘.jpg",
-    desc: "点赞！关注！直播！流量！狂欢直到世界尽头！"+
-    "火花和花火，假面与愚者本无不同——"+
-    "谁被看见，谁被喜欢，谁就是正确答案！",
-    skills: [
-      { name: "普攻 - 哑火了吗", desc: "火球伤害" },
-      { name: "战技 - 尖叫！火花花连线中", desc: "五颗火球直线输出" },
-      { name: "终结技 - 万我狂欢，镜头不要停", desc: "激光射线，超高爆发" },
-      { name: "欢愉技 - 信号溢出：好戏返场！", desc: "对敌方全体造成"+
-        "的火属性欢愉伤害, 并额外造成20次伤害。每次伤害对随机敌方单体造成"+
-        "的火属性欢愉伤害。使火花获得2个【爆点】,可用来抵扣火花的战技点消耗。消耗【爆点】视为消耗战技点"
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: "不死途",
-    type: "雷",
-    path: "巡猎",
-    img:"images/不死途立绘.jpg",
-    desc: "随缘营业，硬核推理，全凭直觉却屡破奇案。"+
-    "猴子当助手，一心盼退休，侦探睡在冰箱，只为等愿者上钩。"+
-    "幻月下，恶兽长嗥，他的追猎游戏会如何收网？",
-    skills: [
-      { name: "普攻 - 利爪，授以礼仪", desc: "物理伤害" },
-      { name: "战技 - 鞭哨，逐尽恶兽", desc: "护盾+加速" },
-      { name: "终结技 - 飨宴，自始无终", desc: "眩晕控制" }
-    ]
-  }
-];
-
-// 全局变量：当前选中的角色，当前技能等级
+const characters = [...characters4, ...characters3];
 let currentCharacter = null;
-let currentSkillLevel = 1; // 技能等级：1-15级，默认1级
-// 全局筛选状态
+let skillIndependentLevels = {};
+
 let currentFilter = {
-  type: "all", // 当前选中的属性
-  path: "all"   // 当前选中的命途
+  type: "all",
+  path: "all"
 };
 let filteredCharacters = [...characters];
 
-// 初始化
 document.addEventListener("DOMContentLoaded", () => {
   renderCharacters();
   bindFilterEvents();
-  bindDetailEvents(); // 绑定详情页事件
-  bindLevelSliderEvent(); // 关键：添加等级滑块事件绑定
+  bindDetailEvents();
 });
 
-// 绑定按钮筛选事件
 function bindFilterEvents() {
-  // 绑定属性筛选按钮
   const typeBtns = document.querySelectorAll(".type-btn");
   typeBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      // 移除所有属性按钮的选中态
       typeBtns.forEach(b => b.classList.remove("active"));
-      // 给当前按钮加选中态
       btn.classList.add("active");
-      // 更新筛选状态
       currentFilter.type = btn.dataset.type;
-      // 重新筛选并渲染
       filterCharacters();
     });
   });
 
-  // 绑定命途筛选按钮
   const pathBtns = document.querySelectorAll(".path-btn");
   pathBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      // 移除所有职业按钮的选中态
       pathBtns.forEach(b => b.classList.remove("active"));
-      // 给当前按钮加选中态
       btn.classList.add("active");
-      // 更新筛选状态
       currentFilter.path = btn.dataset.path;
-      // 重新筛选并渲染
       filterCharacters();
     });
   });
 
-  // 绑定重置筛选按钮
   document.getElementById("reset-filter").addEventListener("click", () => {
-    // 重置筛选状态
     currentFilter = { type: "all", path: "all" };
-    // 恢复所有按钮选中态（全部按钮）
     document.querySelector(".type-btn[data-type='all']").classList.add("active");
     document.querySelector(".path-btn[data-path='all']").classList.add("active");
-    // 移除其他按钮选中态
-    document.querySelectorAll(".type-btn:not([data-type='all'])").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".path-btn:not([data-path='all'])").forEach(b => b.classList.remove("active"));
-    // 重新渲染
     filterCharacters();
   });
 }
 
-// 绑定详情页事件（返回按钮）
 function bindDetailEvents() {
-  // 返回列表按钮
   document.getElementById("back-btn").addEventListener("click", () => {
-    // 隐藏详情页，显示列表
     document.getElementById("character-detail").classList.add("hidden");
     document.getElementById("character-list").classList.remove("hidden");
-    currentSkillLevel = 1;
-    document.getElementById("current-skill-level").textContent = 1;
-    document.getElementById("skill-level-slider").value = 1;
+    skillIndependentLevels = {};
   });
 }
 
-// 绑定等级滑块事件
-function bindLevelSliderEvent() {
-  const skillSlider = document.getElementById("skill-level-slider");
-  const currentSkillLevelEl = document.getElementById("current-skill-level");
-  const skillLevelTip = document.getElementById("skill-level-tip"); // 新增：等级范围提示
-
-  // 监听滑块变化
-  skillSlider.addEventListener("input", () => {
-    currentSkillLevel = parseInt(skillSlider.value);
-    // 更新显示的技能等级
-    currentSkillLevelEl.textContent = currentSkillLevel;
-    // 实时更新技能描述（重新渲染技能列表）
-    if (currentCharacter) {
-      renderSkills(currentCharacter);
-    }
-  });
-
-  // 切换角色时，根据当前角色技能类型，调整滑块范围和提示
-  document.addEventListener("characterChange", () => {
-    if (currentCharacter) {
-      // 判断当前角色是否有普攻（1-10级），有则滑块范围取1-15（兼容所有技能），并提示等级规则
-      const hasNormalAttack = currentCharacter.skills.some(skill => skill.name.includes("普攻"));
-      if (hasNormalAttack) {
-        skillSlider.min = 1;
-        skillSlider.max = 15;
-        skillLevelTip.textContent = "等级规则：普攻1-10级 | 战技/终结技1-15级";
-      } else {
-        skillSlider.min = 1;
-        skillSlider.max = 15;
-        skillLevelTip.textContent = "等级规则：战技/终结技1-15级";
-      }
-      // 重置滑块为1级
-      skillSlider.value = 1;
-      currentSkillLevel = 1;
-      currentSkillLevelEl.textContent = 1;
-    }
-  });
-}
-
-// 筛选角色逻辑
 function filterCharacters() {
   filteredCharacters = characters.filter(char => {
-    // 属性筛选：all则匹配所有，否则匹配对应属性
-    const matchtype = currentFilter.type === "all" || char.type === currentFilter.type;
-    // 职业筛选：all则匹配所有，否则匹配对应职业
-    const matchpath = currentFilter.path === "all" || char.path === currentFilter.path;
-    // 同时满足属性和职业条件
-    return matchtype && matchpath;
+    const matchType = currentFilter.type === "all" || char.type === currentFilter.type;
+    const matchPath = currentFilter.path === "all" || char.path === currentFilter.path;
+    return matchType && matchPath;
   });
-  // 重新渲染
   renderCharacters();
 }
 
-// 渲染角色列表
 function renderCharacters() {
   const list = document.getElementById("character-list");
   list.innerHTML = "";
 
-  // 无数据提示
   if (filteredCharacters.length === 0) {
     list.innerHTML = '<div class="empty-tip">暂无符合条件的角色</div>';
     return;
   }
 
-  // 渲染角色卡片
   filteredCharacters.forEach(char => {
     const card = document.createElement("div");
     card.className = "character-card";
-    card.setAttribute("data-id", char.id);
 
-    // 标签样式类
-    const typeTagClass = `tag type-${char.type === "物理" ? "physical" : char.type === "火" ? "fire" 
-            : char.type === "风" ? "wind" : char.type === "雷" ? "lightning" : char.type === "冰" ? "ice" 
-            : char.type === "量子" ? "quantum": "imaginary"}`;
-    const pathTagClass = `tag path-${char.path === "毁灭" ? "destruction" : char.path === "巡猎" ? "the-hunt" 
-            : char.path === "智识" ? "erudition" : char.path === "虚无" ? "nihility" : char.path === "存护" ? "preservation"
-            : char.path === "丰饶" ? "abundance": char.path === "记忆" ? "remembrance": "elation"}`;
+    const typeTagClass = `tag type-${char.type === "物理" ? "physical" : char.type === "火" ? "fire"
+      : char.type === "风" ? "wind" : char.type === "雷" ? "lightning" : char.type === "冰" ? "ice"
+        : char.type === "量子" ? "quantum" : "imaginary"}`;
 
-    // 卡片内容
+    const pathTagClass = `tag path-${char.path === "毁灭" ? "destruction" : char.path === "巡猎" ? "the-hunt"
+      : char.path === "智识" ? "erudition" : char.path === "同谐" ? "harmony" : char.path === "虚无" ? "nihility"
+        : char.path === "存护" ? "preservation" : char.path === "丰饶" ? "abundance" : char.path === "记忆" ? "remembrance" : "elation"}`;
+
     card.innerHTML = `
       <div class="character-img">
         <img src="${char.img}" alt="${char.name}">
@@ -244,170 +92,201 @@ function renderCharacters() {
       </div>
     `;
 
-    // 点击卡片查看详情（可选）
     card.addEventListener("click", () => {
-        showCharacterDetail(char);
+      skillIndependentLevels = char.skills.reduce((obj, _, i) => (obj[i] = 1, obj), {});
+      showCharacterDetail(char);
     });
-
     list.appendChild(card);
   });
 }
 
-// 显示角色详情页
 function showCharacterDetail(char) {
-    // 保存当前选中的角色
-    currentCharacter = char;
-    // 重置技能等级为1级
-    currentSkillLevel = 1;
-
-  // 隐藏列表，显示详情页
   document.getElementById("character-list").classList.add("hidden");
   document.getElementById("character-detail").classList.remove("hidden");
+  currentCharacter = char;
 
-  // 填充详情页内容
   document.getElementById("detail-name").textContent = char.name;
   document.getElementById("detail-img").src = char.img;
-  document.getElementById("detail-img").alt = char.name;
   document.getElementById("detail-desc-text").textContent = char.desc;
 
-  // 填充属性/命途标签
   const typeTag = document.getElementById("detail-type");
-  typeTag.className = `tag type-${char.type}`;
-  typeTag.textContent = `${char.type}属性`;
-  
-  const pathTag = document.getElementById("detail-path");
-  pathTag.className = `tag path-${char.path}`;
-  pathTag.textContent = `${char.path}命途`;
+  typeTag.className = `tag type-${char.type === "物理" ? "physical" : char.type === "火" ? "fire"
+    : char.type === "风" ? "wind" : char.type === "雷" ? "lightning" : char.type === "冰" ? "ice"
+      : char.type === "量子" ? "quantum" : "imaginary"}`;
+  typeTag.textContent = char.type;
 
-  // 填充固定80级属性数值（取消角色等级条，直接显示最终值）
+  const pathTag = document.getElementById("detail-path");
+  pathTag.className = `tag path-${char.path === "毁灭" ? "destruction" : char.path === "巡猎" ? "the-hunt"
+    : char.path === "智识" ? "erudition" : char.path === "同谐" ? "harmony" : char.path === "虚无" ? "nihility"
+      : char.path === "存护" ? "preservation" : char.path === "丰饶" ? "abundance" : char.path === "记忆" ? "remembrance" : "elation"}`;
+  pathTag.textContent = char.path;
+
   document.getElementById("attack-value").textContent = char.stats.attack;
   document.getElementById("defense-value").textContent = char.stats.defense;
   document.getElementById("hp-value").textContent = char.stats.hp;
+  document.getElementById("speed-value").textContent = char.stats.speed;
 
-  // 重置技能滑块为1级（后续由characterChange事件调整范围）
-  document.getElementById("skill-level-slider").value = 1;
-  document.getElementById("current-skill-level").textContent = 1;
-  
-  // 渲染技能列表（带成长数值，适配不同等级范围）
   renderSkills(char);
+
+  const detailRight = document.querySelector(".detail-right");
+  detailRight.classList.remove("color-fire", "color-ice", "color-lightning", "color-wind", "color-physical", "color-quantum", "color-imaginary");
+
+  switch (char.type) {
+    case "火": detailRight.classList.add("color-fire"); break;
+    case "冰": detailRight.classList.add("color-ice"); break;
+    case "雷": detailRight.classList.add("color-lightning"); break;
+    case "风": detailRight.classList.add("color-wind"); break;
+    case "物理": detailRight.classList.add("color-physical"); break;
+    case "量子": detailRight.classList.add("color-quantum"); break;
+    case "虚数": detailRight.classList.add("color-imaginary"); break;
+  }
 }
 
-// 渲染技能列表（核心：根据当前技能等级+技能自身等级范围，计算并替换成长数值）
 function renderSkills(char) {
-  const skillsList = document.getElementById("detail-skills-list");
-  skillsList.innerHTML = "";
+  const list = document.getElementById("detail-skills-list");
+  list.innerHTML = "";
 
-  char.skills.forEach(skill => {
+  char.skills.forEach((skill, i) => {
     const li = document.createElement("li");
-    // 计算当前技能等级对应的成长数值（根据技能自身等级范围线性成长）
-    const growthValues = calculateSkillGrowth(skill.growth, skill.levelRange);
-    // 替换技能描述中的占位符，显示当前等级的数值
-    let skillDesc = skill.desc;
-    for (const [key, value] of Object.entries(growthValues)) {
-      skillDesc = skillDesc.replace(`{${key}}`, value);
+    li.className = "skill-item";
+    const [min, max] = skill.levelRange;
+    const level = skillIndependentLevels[i];
+    const values = calculateSkillGrowth(skill.growth, skill.levelRange, level, skill);
+
+    function format(t) {
+      if (!t) return "";
+      Object.entries(values).forEach(([k, v]) => t = t.replaceAll(`{${k}}`, `<span class="skill-value">${v.toFixed(2)}</span>`));
+      return t;
     }
-    // 补充技能等级范围提示（hover可查看）
-    const levelRangeTip = skill.levelRange[1] === 10 ? "（1-10级）" : "（1-15级）";
-    // 填充技能内容
-    li.innerHTML = `${skill.name}${levelRangeTip}${skillDesc}`;
-    skillsList.appendChild(li);
+
+    li.innerHTML = `
+      <div class="skill-header">
+        <strong class="skill-name">${skill.name}</strong>
+        <span class="skill-level-range">（${min}-${max}级）</span>
+      </div>
+      <div class="skill-level-control">
+        <span class="skill-current-level">当前等级：${level}</span>
+        <input type="range" class="skill-slider" data-skill-index="${i}" min="${min}" max="${max}" value="${level}">
+      </div>
+      <div class="skill-desc">
+        <div class="desc-short">${format(skill.simpleDesc || skill.desc)}</div>
+        <div class="desc-detail">${format(skill.desc)}</div>
+        <button class="toggle-btn">查看详情</button>
+      </div>
+    `;
+    list.appendChild(li);
   });
-}
 
-// 计算技能成长数值（线性插值，根据技能自身等级范围计算）
-// levelRange：[minLevel, maxLevel]，普攻为[1,10]，其他为[1,15]
-function calculateSkillGrowth(growth, levelRange) {
-  const growthValues = {};
-  const [minLevel, maxLevel] = levelRange;
-  // 限制当前技能等级在该技能的范围内（防止滑块超出范围导致计算错误）
-  const clampedLevel = Math.max(minLevel, Math.min(currentSkillLevel, maxLevel));
-  // 线性公式：当前值 = 最小值 + (最大值 - 最小值) × (当前等级 - 最小等级) / (最大等级 - 最小等级)
-  const levelDifference = maxLevel - minLevel;
+  setTimeout(bindSkillSlidersEvent, 0);
 
-  for (const [key, [min, max]] of Object.entries(growth)) {
-    const value = min + (max - min) * (clampedLevel - minLevel) / levelDifference;
-    // 整数数值取整，百分比/小数保留1位（贴合游戏显示习惯）
-    growthValues[key] = Number.isInteger(min) && Number.isInteger(max) 
-      ? Math.round(value) 
-      : value.toFixed(1);
+  if (char.traces) {
+    document.getElementById("trace1").innerHTML = `<div class="trace-name">${char.traces[0].name}</div><div class="trace-desc">${char.traces[0].desc}</div>`;
+    document.getElementById("trace2").innerHTML = `<div class="trace-name">${char.traces[1].name}</div><div class="trace-desc">${char.traces[1].desc}</div>`;
+    document.getElementById("trace3").innerHTML = `<div class="trace-name">${char.traces[2].name}</div><div class="trace-desc">${char.traces[2].desc}</div>`;
   }
-  return growthValues;
-}
 
+  const growGrid = document.getElementById("grow-stats-grid");
+  growGrid.innerHTML = "";
 
-    // 保存当前选中的角色
-    currentCharacter = char;
-    // 重置技能等级为1级
-    currentSkillLevel = 1;
-
-
-    // 绑定等级滑块事件
-function bindLevelSliderEvent() {
-  const skillSlider = document.getElementById("skill-level-slider");
-  const currentSkillLevelEl = document.getElementById("current-skill-level");
-  const skillLevelTip = document.getElementById("skill-level-tip"); // 新增：等级范围提示
-  // 监听滑块变化
-  skillSlider.addEventListener("input", () => {
-    currentSkillLevel = parseInt(skillSlider.value);
-    // 更新显示的技能等级
-    currentSkillLevelEl.textContent = currentSkillLevel;
-    // 实时更新技能描述（重新渲染技能列表）
-    if (currentCharacter) {
-      renderSkills(currentCharacter);
-    }
-  });
-
-  // 切换角色时，根据当前角色技能类型，调整滑块范围和提示
-  document.addEventListener("characterChange", () => {
-    if (currentCharacter) {
-      // 判断当前角色是否有普攻（1-10级），有则滑块范围取1-15（兼容所有技能），并提示等级规则
-      const hasNormalAttack = currentCharacter.skills.some(skill => skill.name.includes("普攻"));
-      if (hasNormalAttack) {
-        skillSlider.min = 1;
-        skillSlider.max = 15;
-        skillLevelTip.textContent = "等级规则：普攻1-10级 | 战技/终结技1-15级";
-      } else {
-        skillSlider.min = 1;
-        skillSlider.max = 15;
-        skillLevelTip.textContent = "等级规则：战技/终结技1-15级";
-      }
-      // 重置滑块为1级
-      skillSlider.value = 1;
-      currentSkillLevel = 1;
-      currentSkillLevelEl.textContent = 1;
-    }
-  });
-}
-
-li.innerHTML = `
-    <div class="skill-header">
-    <strong class="skill-name">${skill.name}</strong>
-    <span class="skill-level-range">${levelRangeTip}</span>
-    </div>
-  <滑块添加在这里，每个技能单独一个 -->    
-    <div class="skill-level-control">
-    <span class="skill-current-level">当前等级：${currentLevel}</span>
-    <input type="range" class="skill-slider" data-skill-index="${skillIndex}" 
-           min="${minLevel}" max="${maxLevel}" value="${currentLevel}" step="1">
-  </div>
-  <div class="skill-desc">${skillDesc}</div>
-`;
-
-
-function calculateSkillGrowth(growth, levelRange, currentLevel) {
-  const growthValues = {};
-  const [minLevel, maxLevel] = levelRange;
-  // 限制当前等级在技能的范围内（防止异常）
-  const clampedLevel = Math.max(minLevel, Math.min(currentLevel, maxLevel));
-  // 线性公式：当前值 = 最小值 + (最大值 - 最小值) × (当前等级 - 最小等级) / (最大等级 - 最小等级)
-  const levelDifference = maxLevel - minLevel;
-
-  for (const [key, [min, max]] of Object.entries(growth)) {
-    const value = min + (max - min) * (clampedLevel - minLevel) / levelDifference;
-    // 整数数值取整，百分比/小数保留1位（贴合游戏显示习惯，保留原始逻辑）
-    growthValues[key] = Number.isInteger(min) && Number.isInteger(max) 
-      ? Math.round(value) 
-      : value.toFixed(1);
+  if (char.growStats && char.growStats.length > 0) {
+    char.growStats.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "trace-card";
+      div.innerHTML = `
+        <div class="trace-name">${item.name}</div>
+        <div class="trace-desc">${item.value}</div>
+      `;
+      growGrid.appendChild(div);
+    });
   }
-  return growthValues;
+
+  const consSection = document.querySelector(".constellation-section");
+  const consList = document.getElementById("constellation-list");
+  consList.innerHTML = "";
+
+  if (char.constellation?.length > 0) {
+    consSection.style.display = "block";
+    char.constellation.forEach((c, idx) => {
+      const item = document.createElement("li");
+      item.className = "constellation-item";
+      item.innerHTML = `
+        <div class="constellation-img"><img src="${c.img}" alt=""></div>
+        <div class="constellation-content">
+          <div class="constellation-name">${c.name}</div>
+          <div class="constellation-desc">${c.desc}</div>
+        </div>
+      `;
+      consList.appendChild(item);
+    });
+  } else {
+    consSection.style.display = "none";
+  }
 }
+
+function bindSkillSlidersEvent() {
+  document.querySelectorAll(".skill-slider").forEach(s => {
+    s.addEventListener("input", e => {
+      const i = +e.target.dataset.skillIndex;
+      skillIndependentLevels[i] = +e.target.value;
+      e.target.parentElement.querySelector(".skill-current-level").textContent = `当前等级：${e.target.value}`;
+      updateSingleSkillDesc(i);
+    });
+  });
+}
+
+function updateSingleSkillDesc(i) {
+  const skill = currentCharacter.skills[i];
+  const item = document.querySelectorAll(".skill-item")[i];
+  const level = skillIndependentLevels[i];
+  const values = calculateSkillGrowth(skill.growth, skill.levelRange, level, skill);
+
+  function format(t) {
+    if (!t) return "";
+    Object.entries(values).forEach(([k, v]) => t = t.replaceAll(`{${k}}`, `<span class="skill-value">${v.toFixed(2)}</span>`));
+    return t;
+  }
+
+  item.querySelector(".desc-short").innerHTML = format(skill.simpleDesc || skill.desc);
+  item.querySelector(".desc-detail").innerHTML = format(skill.desc);
+}
+
+function calculateSkillGrowth(growth, range, level, skill) {
+  const res = {};
+  const [minL, maxL] = range;
+  const curr = Math.max(minL, Math.min(maxL, level));
+  if (!growth) return res;
+
+  if (skill && skill.customCalc) {
+    return skill.customCalc(level, curr);
+  }
+
+  for (const [k, [min, max]] of Object.entries(growth)) {
+    let val;
+    if (minL === 1 && maxL === 15) {
+      if (curr <= 6) val = min + (min * 0.5) * (curr - 1) / 5;
+      else if (curr <= 10) val = min * 1.5 + (min * 0.5) * (curr - 6) / 4;
+      else val = min * 2 + (max - min * 2) * (curr - 10) / 5;
+    } else {
+      val = min + (max - min) * (curr - minL) / (maxL - minL);
+    }
+    res[k] = val;
+  }
+  return res;
+}
+
+document.addEventListener("click", e => {
+  if (!e.target.classList.contains("toggle-btn")) return;
+  const btn = e.target;
+  const short = btn.parentElement.querySelector(".desc-short");
+  const detail = btn.parentElement.querySelector(".desc-detail");
+
+  if (detail.style.display !== "block") {
+    short.style.display = "none";
+    detail.style.display = "block";
+    btn.textContent = "收起详情";
+  } else {
+    short.style.display = "block";
+    detail.style.display = "none";
+    btn.textContent = "查看详情";
+  }
+});
