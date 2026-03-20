@@ -1,4 +1,4 @@
-const characters = [...characters4, ...characters3];
+const characters = [...characters4, ...characters3_2, ...characters3_1];
 let currentCharacter = null;
 let skillIndependentLevels = {};
 
